@@ -34,16 +34,16 @@ int main()
     do
     {
         printf("Adja meg a jegyeket: ");
-        fgets(jegyekRaw, sizeof(jegyekRaw), stdin);  // read jegyekRaw
+        fgets(jegyekRaw, sizeof(jegyekRaw), stdin);  //jegyek beolvasása jegyekRaw-ba
         jegyKezelo();
 
         printf("Adja meg a sulyokat: ");
-        fgets(sulyokRaw, sizeof(sulyokRaw), stdin);  // read sulyokRaw
+        fgets(sulyokRaw, sizeof(sulyokRaw), stdin);  //súlyok beolvasása sulyokRaw-ba
         sulyKezelo();
         
         kalauz();
 
-    } while (error == (true));   
+    } while (error == (true));   //amíg a kalauz() el nem fogadja (megegyező bevitt darabszámok esetén)
 
         printf("Egyes erdemjegyek darabszama a megadott sorozatban:\n");
         for(erdemjegy=1; erdemjegy <= 5; erdemjegy++)
@@ -53,31 +53,32 @@ int main()
     
 }
 
+//A jegyKezelo() és sulyKezelo() modul formailag nagyon hasonlít, de az eltérő feltételek, bemeneti értékek és ellenőrzés miatt indokolt külön kezelni
 //Érdemjegyek beolvasása
 int jegyKezelo()
 {
-    token = strtok( jegyekRaw, seps );  //string tördelése
-    int i = 0;
-    counter1 = 0;
+    //string tördelése tokenekre ciklusban
+    token = strtok( jegyekRaw, seps );  //kezdeti tokenérték
+    int i = 0;  //összes feldolgozott token száma
+    counter1 = 0;   //elfogadott érdemjegyek darabszáma
     while( token != NULL )
     {
-        counter1++;
+        
         sscanf(token, "%d", &tokenInt);
         if( isNumber(token)  && tokenInt < 6 && tokenInt > 0 )
         {
-            //printf( "%d ", tokenInt );
             jegyek[i] = tokenInt;
             token = strtok( NULL, seps );
-            i++;
+            counter1++;
         }
         else{
             printf( "Hibas bemenet mellozese! (%s)\n", token );
             token = strtok( NULL, seps );
-            i++;
-            counter1--;
         }
+        i++;
     }
 
+    //Elfogadott értékek kiírása
     printf( "A megadott jegyek: " );    
     for (int j = 0; j < i; j++){
         if(jegyek[j] != 0)
@@ -86,34 +87,35 @@ int jegyKezelo()
         }  
     }
     printf("\n");
-    return counter1;
+    return counter1; 
 }
 
 //Súlyok beolvasása
 int sulyKezelo()
 {
-    token = strtok( sulyokRaw, seps );
-    int i = 0;
-    counter2 = 0;
+    //string tördelése tokenekre ciklusban
+    token = strtok( sulyokRaw, seps );  //kezdeti tokenérték
+    int i = 0;  //összes feldolgozott token száma
+    counter2 = 0;   //elfogadott súlyértékek darabszáma
     while( token != NULL )
     {
-        counter2++;
+        
         sscanf(token, "%d", &tokenInt);
         if( isNumber(token)  && tokenInt < 10 && tokenInt > 0 )
         {
-            //printf( "%d ", tokenInt );
             sulyok[i] = tokenInt;
             token = strtok( NULL, seps );
-            i++;
+            counter2++;
         }
         else{
             printf( "Hibas bemenet mellozese! (%s)\n", token );
             token = strtok( NULL, seps );
-            i++;
-            counter2--;
+            
         }
+        i++;
     }
 
+    //Elfogadott értékek kiírása
     printf( "A megadott sulyok:\n" );    
     for (int j = 0; j < i; j++){
         if(sulyok[j] != 0)
@@ -130,13 +132,13 @@ int isNumber(char token[])
 {
     for (int i = 0; token[i]!= '\0'; i++)
     {
-        if(strstr(token, "."))
+        if(strstr(token, "."))  //ha a token pontot tartalmaz, feltételezzük, hogy valós szám
             {
             printf("Valos bemenet! Tort resz eldobasa!\n");
-            return token[i];
+            return token[i];    //törtrészt eldobjuk
             }
             
-        if (isdigit(token[i]) == 0)
+        if (isdigit(token[i]) == 0) //ha a token értéke integer...
             return 0;
     }
     return 1;
@@ -146,7 +148,7 @@ int isNumber(char token[])
 int kalauz()
 {
     error = (false);
-    if(counter1 != counter2)
+    if(counter1 != counter2)    //sulyKezelo() és jegyKezelo() return értéke
     {
         printf("Hiba! A jegyek es megadott sulyok darabszama nem egyezik!\n");
         error = (true);
@@ -158,6 +160,7 @@ int kalauz()
 //Egyes érdemjegyek megszámlálása
 int jegySzamlalo(int erdemjegy)
 {
+    //Csak egy érdemjegyet számol, ciklusban kell futtatni (erdemjegy = 1..5)
     int jegyCounter = 0;
     size_t N = sizeof(jegyek)/sizeof(jegyek[0]);
     for(int i = 0; (unsigned)i <= N; i++)
