@@ -13,7 +13,6 @@ char sulyokRaw[300] = "Sulyok input stringje";
 int jegyek[100];
 int sulyok[100];
 
-int i = 0;
 char seps[]   = " ,\t\n";
 char *token;
 int tokenInt;
@@ -21,15 +20,17 @@ int tokenInt;
 int isNumber(char token[]);
 
 
-int input_kiertekelo( void )
+int main()
 {
     printf("Adja meg a jegyeket: ");
     fgets(jegyekRaw, sizeof(jegyekRaw), stdin);  // read jegyekRaw
 
     token = strtok( jegyekRaw, seps );
-
+    int i = 0;
+    int counter = 0;
     while( token != NULL )
     {
+        counter++;
         sscanf(token, "%d", &tokenInt);
         if( isNumber(token)  && tokenInt < 6 && tokenInt > 0 )
         {
@@ -42,6 +43,7 @@ int input_kiertekelo( void )
             printf( "Hibas bemenet mellozese! (%s)\n", token );
             token = strtok( NULL, seps );
             i++;
+            counter--;
         }
     }
 
@@ -52,8 +54,9 @@ int input_kiertekelo( void )
             printf("%d ", jegyek[j]);   
         }  
     }
-    printf("\n");
-    i = 0;
+    printf("\n%d", counter);
+
+    return counter;
 }
 
 int isNumber(char token[])
