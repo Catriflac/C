@@ -20,7 +20,8 @@ int tokenInt;
 
 int isNumber(char token[]);
 
-int main( void )
+
+int input_kiertekelo( void )
 {
     printf("Adja meg a jegyeket: ");
     fgets(jegyekRaw, sizeof(jegyekRaw), stdin);  // read jegyekRaw
@@ -52,8 +53,7 @@ int main( void )
         }  
     }
     printf("\n");
-
-
+    i = 0;
 }
 
 int isNumber(char token[])
